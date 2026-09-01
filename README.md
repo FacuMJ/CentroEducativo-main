@@ -1,36 +1,109 @@
 # Educar para Transformar — Campus Virtual
 
-Plataforma del campus virtual del colegio "Educar para Transformar". Monorepo con backend en Node/Express/Prisma y frontend en React/Vite/Tailwind.
+Plataforma de campus virtual para el colegio **"Educar para Transformar"**.
+Permite a estudiantes, docentes, padres y administradores gestionar el ciclo educativo completo desde el navegador.
 
-## Estructura
+Monorepo con backend en Node.js / Express / Prisma y frontend en HTML + CSS + JavaScript vanilla.
 
+---
+
+## Funcionalidades principales
+
+| Rol | Funcionalidades |
+|---|---|
+| **Estudiante** | Materias, actividades, notas, asistencia, foros y mensajería interna |
+| **Docente** | Planes de estudio, actividades, correcciones, asistencia, calificaciones y comunicación |
+| **Padre / Tutor** | Progreso del/los hijo(s), pagos, mensajes y anuncios institucionales |
+| **Administrador** | Gestión de usuarios, materias, ciclos lectivos, inscripciones, opiniones y postulaciones laborales |
+
+---
+
+## Requisitos previos
+
+- [Node.js](https://nodejs.org/) >= 20
+- [pnpm](https://pnpm.io/) >= 9
+- [PostgreSQL](https://www.postgresql.org/) 16
+
+---
+
+## Cómo ejecutar el proyecto
+
+### 1. Clonar el repositorio
+
+```bash
+git clone <url-del-repositorio>
+cd CentroEducativo-main
 ```
-.
-├── backend/    # API REST (Node + Express + Prisma + PostgreSQL)
-└── frontend/   # SPA (React + TypeScript + Vite + Tailwind)
-```
 
-## Requisitos
-
-- Node.js >= 20
-- pnpm >= 9
-- PostgreSQL 16
-
-## Setup
+### 2. Instalar dependencias
 
 ```bash
 pnpm install
 ```
 
-Más instrucciones de setup, variables de entorno y comandos de desarrollo se documentarán a medida que se implementen los módulos.
+### 3. Configurar variables de entorno
 
-## Roles
+```bash
+cp backend/.env.example backend/.env
+# Editar backend/.env con los datos de la base de datos y el secreto JWT
+```
 
-- **Estudiante** — accede a materias, actividades, notas, asistencia, foros y mensajes.
-- **Docente** — gestiona materias, planes de estudio, actividades, correcciones, asistencia, calificaciones y comunicación.
-- **Padre / Tutor** — visualiza el progreso del/los hijo(s), pagos, mensajes y anuncios.
-- **Admin** — administra usuarios, materias, ciclos lectivos y la estructura institucional.
+### 4. Inicializar la base de datos
+
+```bash
+cd backend
+pnpm prisma migrate dev
+pnpm prisma db seed   # (si existe el seed)
+```
+
+### 5. Iniciar el backend
+
+```bash
+cd backend
+pnpm dev
+```
+
+### 6. Servir el frontend
+
+Abrir `frontend/index.html` directamente en el navegador, o usar un servidor estático:
+
+```bash
+npx serve frontend
+```
+
+---
+
+## Estructura del proyecto
+
+```
+.
+├── backend/        # API REST — Node.js + Express + Prisma + PostgreSQL
+│   ├── src/
+│   │   ├── routes/     # Endpoints por recurso (auth, admin, docente, etc.)
+│   │   ├── middleware/ # Autenticación JWT, manejo de errores
+│   │   ├── services/   # Lógica de negocio (mailer, etc.)
+│   │   └── db/         # Cliente Prisma
+│   └── prisma/         # Esquema y migraciones
+└── frontend/       # Interfaz de usuario — HTML + CSS + JS vanilla
+    ├── campus.js       # Helpers compartidos: auth, fetch, logout, formato
+    ├── script.js       # Lógica de la página de inicio (login, registro)
+    ├── panel_admin.html
+    ├── panel_docente.html
+    ├── panel_estudiante.html
+    └── panel_padre.html
+```
+
+---
+
+## Integrantes del equipo
+
+<!-- Agregar nombres del equipo -->
+- ...
+- ...
+- ...
+
+---
 
 ## Estado
 
-En construcción — rama de trabajo: `fabri`.
+En construcción — rama de trabajo: `mejora-buenas-practicas`.
