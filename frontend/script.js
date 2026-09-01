@@ -182,9 +182,11 @@ function checkUserStatus() {
     }
 }
 
+// MEJORA C — Eliminación de duplicación:
+//   Se reemplaza la copia local de logout() por window.logout() definida
+//   en campus.js, que implementa el cierre de sesión de forma completa y segura.
 function logout() {
-    localStorage.removeItem('usuarioActual');
-    window.location.href = 'index.html';
+    window.logout();
 }
 
 // Enrutador de Paneles por Rol
