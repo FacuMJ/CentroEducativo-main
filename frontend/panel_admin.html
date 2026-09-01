@@ -695,12 +695,47 @@
                 cargarInscripciones();
             } else toastError(res.mensaje || 'Error.');
         }
+        // ─────────────────────────────────────────────────────────────────────
+        // ACTIVIDAD 3 — Refactorización 2: código repetido → función reutilizable
+        //
+        // Problema original: borrarInsc(), borrarOp() y borrarEmp() eran tres
+        // funciones casi idénticas (confirmación → DELETE → toast → recargar).
+        // El único cambio entre ellas era el texto del diálogo, el endpoint y
+        // la función de recarga.
+        //
+        // Solución: se extrae borrarRecurso() que encapsula la lógica común y
+        // recibe como parámetros lo que varía entre cada caso.
+        // ─────────────────────────────────────────────────────────────────────
+
+        /**
+         * Elimina un recurso tras pedir confirmación al usuario.
+         * @param {object} cfg
+         * @param {string}   cfg.pregunta    - Texto de la pregunta de confirmación.
+         * @param {string}   cfg.titulo      - Título del diálogo de confirmación.
+         * @param {string}   cfg.endpoint    - URL del DELETE (p. ej. '/api/admin/inscriptions/5').
+         * @param {string}   cfg.mensajeOk   - Toast de éxito tras borrar.
+         * @param {Function} cfg.recargar    - Función que recarga la tabla correspondiente.
+         */
+        async function borrarRecurso({ pregunta, titulo, endpoint, mensajeOk, recargar }) {
+            const confirmado = await window.uxConfirm(pregunta, { title: titulo, danger: true, okLabel: 'Eliminar' });
+            if (!confirmado) return;
+            const respuesta = await window.apiDelete(endpoint);
+            if (respuesta.exito) {
+                toastSuccess(mensajeOk);
+                recargar();
+            } else {
+                toastError(respuesta.mensaje || 'Error.');
+            }
+        }
+
         async function borrarInsc(id) {
-            const ok = await window.uxConfirm('¿Eliminar este registro de la base?', { title: 'Eliminar inscripción', danger: true, okLabel: 'Eliminar' });
-            if (!ok) return;
-            const r = await window.apiDelete('/api/admin/inscriptions/' + id);
-            if (r.exito) { toastSuccess('Eliminado.'); cargarInscripciones(); }
-            else toastError(r.mensaje || 'Error.');
+            await borrarRecurso({
+                pregunta:   '¿Eliminar este registro de la base?',
+                titulo:     'Eliminar inscripción',
+                endpoint:   '/api/admin/inscriptions/' + id,
+                mensajeOk:  'Eliminado.',
+                recargar:   cargarInscripciones,
+            });
         }
 
         /* ============================================================
@@ -750,11 +785,13 @@
             } else toastError(r.mensaje || 'Error.');
         }
         async function borrarOp(id) {
-            const ok = await window.uxConfirm('¿Eliminar esta opinión definitivamente?', { title: 'Eliminar opinión', danger: true, okLabel: 'Eliminar' });
-            if (!ok) return;
-            const r = await window.apiDelete('/api/admin/opinions/' + id);
-            if (r.exito) { toastSuccess('Eliminada.'); cargarOpiniones(); }
-            else toastError(r.mensaje || 'Error.');
+            await borrarRecurso({
+                pregunta:   '¿Eliminar esta opinión definitivamente?',
+                titulo:     'Eliminar opinión',
+                endpoint:   '/api/admin/opinions/' + id,
+                mensajeOk:  'Eliminada.',
+                recargar:   cargarOpiniones,
+            });
         }
 
         /* ============================================================
@@ -818,11 +855,13 @@
             } else toastError(res.mensaje || 'Error.');
         }
         async function borrarEmp(id) {
-            const ok = await window.uxConfirm('¿Eliminar esta postulación de la base?', { title: 'Eliminar postulación', danger: true, okLabel: 'Eliminar' });
-            if (!ok) return;
-            const r = await window.apiDelete('/api/admin/employment/' + id);
-            if (r.exito) { toastSuccess('Eliminada.'); cargarPostulaciones(); }
-            else toastError(r.mensaje || 'Error.');
+            await borrarRecurso({
+                pregunta:   '¿Eliminar esta postulación de la base?',
+                titulo:     'Eliminar postulación',
+                endpoint:   '/api/admin/employment/' + id,
+                mensajeOk:  'Eliminada.',
+                recargar:   cargarPostulaciones,
+            });
         }
 
         /* ============================================================
