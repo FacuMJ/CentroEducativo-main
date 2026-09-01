@@ -648,22 +648,25 @@
                 refrescarBadgePendientes();
                 return;
             }
-            tbody.innerHTML = data.inscripciones.map(i => `
+            // MEJORA A — Nombres significativos:
+            //   Se renombra el parámetro 'i' del .map() por 'insc' (inscripción)
+            //   para que el código sea legible sin necesitar el contexto.
+            tbody.innerHTML = data.inscripciones.map(insc => `
                 <tr>
-                    <td>${i.id}</td>
-                    <td><b>${window.escapeHtml(i.nombreTutor)}</b></td>
-                    <td>${window.escapeHtml(i.emailTutor)}<br><span style="color:#64748b; font-size:0.82rem;">${window.escapeHtml(i.telefonoTutor)}</span></td>
-                    <td>${window.escapeHtml(i.nombreEstudiante)}</td>
-                    <td>${window.escapeHtml(i.nivel)}<br><span style="color:#64748b; font-size:0.82rem;">${window.escapeHtml(i.curso)}</span></td>
-                    <td style="max-width:220px; font-size:0.85rem;">${window.escapeHtml(i.mensaje || '—')}</td>
-                    <td><span style="color:${STATUS_COLOR[i.status]}; font-weight:600;">${STATUS_LABEL[i.status]}</span></td>
-                    <td style="font-size:0.82rem;">${fmtFechaCorta(i.createdAt)}</td>
+                    <td>${insc.id}</td>
+                    <td><b>${window.escapeHtml(insc.nombreTutor)}</b></td>
+                    <td>${window.escapeHtml(insc.emailTutor)}<br><span style="color:#64748b; font-size:0.82rem;">${window.escapeHtml(insc.telefonoTutor)}</span></td>
+                    <td>${window.escapeHtml(insc.nombreEstudiante)}</td>
+                    <td>${window.escapeHtml(insc.nivel)}<br><span style="color:#64748b; font-size:0.82rem;">${window.escapeHtml(insc.curso)}</span></td>
+                    <td style="max-width:220px; font-size:0.85rem;">${window.escapeHtml(insc.mensaje || '—')}</td>
+                    <td><span style="color:${STATUS_COLOR[insc.status]}; font-weight:600;">${STATUS_LABEL[insc.status]}</span></td>
+                    <td style="font-size:0.82rem;">${fmtFechaCorta(insc.createdAt)}</td>
                     <td>
-                        ${i.status === 'PENDIENTE' ? `
-                            <button class="btn-action" style="padding:6px 10px; font-size:0.8rem;" onclick="resolverInsc(${i.id}, 'approve')"><i class="fas fa-check"></i></button>
-                            <button class="btn-danger" onclick="resolverInsc(${i.id}, 'reject')"><i class="fas fa-times"></i></button>
+                        ${insc.status === 'PENDIENTE' ? `
+                            <button class="btn-action" style="padding:6px 10px; font-size:0.8rem;" onclick="resolverInsc(${insc.id}, 'approve')"><i class="fas fa-check"></i></button>
+                            <button class="btn-danger" onclick="resolverInsc(${insc.id}, 'reject')"><i class="fas fa-times"></i></button>
                         ` : `
-                            <button class="btn-danger" onclick="borrarInsc(${i.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
+                            <button class="btn-danger" onclick="borrarInsc(${insc.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
                         `}
                     </td>
                 </tr>
@@ -714,21 +717,24 @@
                 refrescarBadgePendientes();
                 return;
             }
-            tbody.innerHTML = data.opiniones.map(o => `
+            // MEJORA A — Nombres significativos:
+            //   Se renombra el parámetro 'o' del .map() por 'opinion'
+            //   para que el código sea legible sin necesitar el contexto.
+            tbody.innerHTML = data.opiniones.map(opinion => `
                 <tr>
-                    <td>${o.id}</td>
-                    <td>${window.escapeHtml(o.nombre || 'Anónimo')}</td>
-                    <td>${window.escapeHtml(o.rol)}</td>
-                    <td style="max-width:300px; font-size:0.88rem;">"${window.escapeHtml(o.texto)}"</td>
-                    <td style="color:#f59e0b;">${'★'.repeat(o.rating)}${'☆'.repeat(5 - o.rating)}</td>
-                    <td><span style="color:${STATUS_COLOR[o.status]}; font-weight:600;">${STATUS_LABEL[o.status]}</span></td>
-                    <td style="font-size:0.82rem;">${fmtFechaCorta(o.createdAt)}</td>
+                    <td>${opinion.id}</td>
+                    <td>${window.escapeHtml(opinion.nombre || 'Anónimo')}</td>
+                    <td>${window.escapeHtml(opinion.rol)}</td>
+                    <td style="max-width:300px; font-size:0.88rem;">"${window.escapeHtml(opinion.texto)}"</td>
+                    <td style="color:#f59e0b;">${'★'.repeat(opinion.rating)}${'☆'.repeat(5 - opinion.rating)}</td>
+                    <td><span style="color:${STATUS_COLOR[opinion.status]}; font-weight:600;">${STATUS_LABEL[opinion.status]}</span></td>
+                    <td style="font-size:0.82rem;">${fmtFechaCorta(opinion.createdAt)}</td>
                     <td>
-                        ${o.status === 'PENDIENTE' ? `
-                            <button class="btn-action" style="padding:6px 10px; font-size:0.8rem;" onclick="resolverOp(${o.id}, 'approve')"><i class="fas fa-check"></i></button>
-                            <button class="btn-danger" onclick="resolverOp(${o.id}, 'reject')"><i class="fas fa-times"></i></button>
+                        ${opinion.status === 'PENDIENTE' ? `
+                            <button class="btn-action" style="padding:6px 10px; font-size:0.8rem;" onclick="resolverOp(${opinion.id}, 'approve')"><i class="fas fa-check"></i></button>
+                            <button class="btn-danger" onclick="resolverOp(${opinion.id}, 'reject')"><i class="fas fa-times"></i></button>
                         ` : `
-                            <button class="btn-danger" onclick="borrarOp(${o.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
+                            <button class="btn-danger" onclick="borrarOp(${opinion.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
                         `}
                     </td>
                 </tr>
@@ -765,21 +771,24 @@
                 refrescarBadgePendientes();
                 return;
             }
-            tbody.innerHTML = data.postulaciones.map(p => `
+            // MEJORA A — Nombres significativos:
+            //   Se renombra el parámetro 'p' del .map() por 'postulacion'
+            //   para que el código sea legible sin necesitar el contexto.
+            tbody.innerHTML = data.postulaciones.map(postulacion => `
                 <tr>
-                    <td>${p.id}</td>
-                    <td><b>${window.escapeHtml(p.nombre)}</b></td>
-                    <td>${window.escapeHtml(p.email)}</td>
-                    <td>${window.escapeHtml(p.puesto)}</td>
-                    <td>${p.cvUrl ? `<a href="${p.cvUrl}" target="_blank" style="color:#8b5cf6; font-weight:600;"><i class="fas fa-file-pdf"></i> Ver CV</a>` : '<span style="color:#94a3b8;">Sin CV</span>'}</td>
-                    <td><span style="color:${STATUS_COLOR[p.status]}; font-weight:600;">${STATUS_LABEL[p.status]}</span></td>
-                    <td style="font-size:0.82rem;">${fmtFechaCorta(p.createdAt)}</td>
+                    <td>${postulacion.id}</td>
+                    <td><b>${window.escapeHtml(postulacion.nombre)}</b></td>
+                    <td>${window.escapeHtml(postulacion.email)}</td>
+                    <td>${window.escapeHtml(postulacion.puesto)}</td>
+                    <td>${postulacion.cvUrl ? `<a href="${postulacion.cvUrl}" target="_blank" style="color:#8b5cf6; font-weight:600;"><i class="fas fa-file-pdf"></i> Ver CV</a>` : '<span style="color:#94a3b8;">Sin CV</span>'}</td>
+                    <td><span style="color:${STATUS_COLOR[postulacion.status]}; font-weight:600;">${STATUS_LABEL[postulacion.status]}</span></td>
+                    <td style="font-size:0.82rem;">${fmtFechaCorta(postulacion.createdAt)}</td>
                     <td>
-                        ${p.status === 'PENDIENTE' ? `
-                            <button class="btn-action" style="padding:6px 10px; font-size:0.8rem;" onclick="resolverEmp(${p.id}, 'approve')"><i class="fas fa-check"></i></button>
-                            <button class="btn-danger" onclick="resolverEmp(${p.id}, 'reject')"><i class="fas fa-times"></i></button>
+                        ${postulacion.status === 'PENDIENTE' ? `
+                            <button class="btn-action" style="padding:6px 10px; font-size:0.8rem;" onclick="resolverEmp(${postulacion.id}, 'approve')"><i class="fas fa-check"></i></button>
+                            <button class="btn-danger" onclick="resolverEmp(${postulacion.id}, 'reject')"><i class="fas fa-times"></i></button>
                         ` : `
-                            <button class="btn-danger" onclick="borrarEmp(${p.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
+                            <button class="btn-danger" onclick="borrarEmp(${postulacion.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
                         `}
                     </td>
                 </tr>
@@ -992,11 +1001,11 @@
             }
         }
 
+        // MEJORA C — Eliminación de duplicación:
+        //   Se reemplaza logout() local por window.logout() de campus.js.
+        //   La versión correcta (con POST al servidor) queda definida una sola vez.
         function logout() {
-            fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
-            localStorage.removeItem('usuarioActual');
-            sessionStorage.removeItem('token');
-            window.location.href = 'index.html';
+            window.logout();
         }
     </script>
 </body>

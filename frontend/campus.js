@@ -79,6 +79,37 @@
         return authedFetch(url, { method: 'DELETE' }).then(r => r.json());
     };
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // MEJORA C — Eliminación de duplicación:
+    //   logout() estaba escrita 5 veces (panel_admin, panel_docente,
+    //   panel_estudiante, panel_padre y script.js), cada una diferente.
+    //   Se unifica aquí para que todos los paneles usen la misma versión.
+    //
+    // MEJORA E — Comentarios:
+    //   Se agrega JSDoc explicando la decisión no evidente de hacer POST al
+    //   servidor: es necesario para que el backend invalide la cookie httpOnly
+    //   del refresh token. Sin ese llamado, el token sigue válido aunque el
+    //   usuario "cierre sesión" en el navegador.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Cierra la sesión del usuario de forma segura.
+     *
+     * Avisa al servidor mediante POST /api/auth/logout para que invalide
+     * el refresh token almacenado en la cookie httpOnly. Sin este paso,
+     * el refresh token permanecería activo y podría reutilizarse.
+     * Luego limpia el estado local y redirige al inicio.
+     */
+    window.logout = function () {
+        // Invalidar el refresh token en el servidor antes de limpiar el cliente
+        fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+            .catch(() => {}); // Si falla la red, igual seguimos con el cierre local
+
+        localStorage.removeItem('usuarioActual');
+        sessionStorage.removeItem('token');
+        window.location.href = 'index.html';
+    };
+
     window.formatFecha = function (iso) {
         if (!iso) return '—';
         return new Date(iso).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
