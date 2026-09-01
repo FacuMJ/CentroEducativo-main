@@ -1,6 +1,21 @@
 /**
- * campus.js — helpers compartidos por los 3 paneles
- * (auth headers, fetch wrappers, notification bell, formatos)
+ * campus.js — helpers compartidos por todos los paneles del campus.
+ *
+ * MEJORA B — Funciones con responsabilidad definida:
+ *   Este módulo centraliza las responsabilidades que antes estaban
+ *   dispersas e inconsistentes en cada panel:
+ *     - Autenticación: authHeaders(), authHeadersNoCT()
+ *     - Llamadas a la API con reintento automático: apiGet(), apiPost(),
+ *       apiPatch(), apiDelete(), apiUpload()
+ *     - Sesión: logout() (unificado — ver MEJORA C más abajo)
+ *     - Formato de fechas: formatFecha(), formatFechaHora()
+ *     - Seguridad HTML: escapeHtml()
+ *     - Notificaciones: campana de alertas
+ *
+ * MEJORA E — Comentarios:
+ *   Se documenta cada sección con su propósito para que un nuevo
+ *   desarrollador entienda la estructura sin necesidad de leer
+ *   el código de todos los paneles.
  */
 (function () {
     function token() { return sessionStorage.getItem('token'); }
